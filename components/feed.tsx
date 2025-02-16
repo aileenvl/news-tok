@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ContentCard } from "./content-card"
@@ -14,6 +14,12 @@ interface FeedProps {
 export function Feed({ initialContent, type }: FeedProps) {
   const [content, setContent] = useState(initialContent)
 
+  // Update content when initialContent changes
+  useEffect(() => {
+    console.log('Feed received initialContent:', initialContent.length);
+    setContent(initialContent);
+  }, [initialContent]);
+
   const handleBookmarkToggle = (id: string, isBookmarked: boolean) => {
     if (type === "bookmarked") {
       setContent((prev) => prev.filter((item) => item.id !== id))
@@ -21,6 +27,8 @@ export function Feed({ initialContent, type }: FeedProps) {
       setContent((prev) => prev.map((item) => (item.id === id ? { ...item, isBookmarked } : item)))
     }
   }
+
+  console.log('Feed rendering with content length:', content.length);
 
   if (content.length === 0) {
     return (
@@ -57,4 +65,3 @@ export function Feed({ initialContent, type }: FeedProps) {
     </ScrollArea>
   )
 }
-
